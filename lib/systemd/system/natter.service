@@ -10,7 +10,7 @@ ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 Restart=always
 RestartSec=5
-StartLimitIntervalSec=0
+StartLimitInterval=0
 RestartPreventExitStatus=23
 
 [Install]
