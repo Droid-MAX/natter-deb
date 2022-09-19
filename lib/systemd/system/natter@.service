@@ -9,6 +9,7 @@ ExecStart=/usr/bin/natter $SRC_HOST $SRC_PORT
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 Restart=always
+RestartSec=5
 RestartPreventExitStatus=23
 
 [Install]
