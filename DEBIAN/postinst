@@ -1,0 +1,6 @@
+#!/bin/bash
+systemctl daemon-reload
+echo "Enabling natter daemon service."
+if [[ -f "/lib/systemd/system/natter.service" ]]; then
+    systemctl enable natter.service
+fi

@@ -1,0 +1,15 @@
+[Unit]
+Description=Natter daemon
+After=network.target syslog.target
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/natter/%i.ini
+ExecStart=/usr/bin/natter $SRC_HOST $SRC_PORT
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=always
+RestartPreventExitStatus=23
+
+[Install]
+WantedBy=multi-user.target

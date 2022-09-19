@@ -1,0 +1,5 @@
+#!/bin/bash
+echo "Shutting down natter daemon service."
+if [[ -f "/lib/systemd/system/natter.service" ]] || [[ -f "/etc/systemd/system/natter.service" ]]; then
+    systemctl stop natter.service
+fi

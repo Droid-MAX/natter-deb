@@ -1,0 +1,8 @@
+Package: natter
+Version: 0.1
+Depends: systemd, python
+Section: utils
+Priority: optional
+Architecture: all
+Maintainer: Mike Wang <https://github.com/MikeWang000000/Natter>
+Description: TCP hole punching tool.
