@@ -4,8 +4,7 @@ After=network.target syslog.target
 
 [Service]
 Type=simple
-EnvironmentFile=/etc/natter/natter.ini
-ExecStart=/usr/bin/natter $SRC_HOST $SRC_PORT
+ExecStart=/usr/bin/natter -c natter-config.json
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 Restart=always
