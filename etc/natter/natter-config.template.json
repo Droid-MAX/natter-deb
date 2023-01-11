@@ -4,7 +4,7 @@
         "log_file": "/var/log/natter.log"
     },
     "status_report": {
-        "hook": "bash /usr/bin/natter-hook.sh '{protocol}' '{inner_ip}' '{inner_port}' '{outer_ip}' '{outer_port}'",
+        "hook": "bash /etc/natter/natter-hook.sh '{protocol}' '{inner_ip}' '{inner_port}' '{outer_ip}' '{outer_port}'",
         "status_file": "/etc/natter/natter-status.json"
     },
     "open_port": {

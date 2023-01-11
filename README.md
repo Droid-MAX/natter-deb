@@ -57,7 +57,7 @@ natter -c /etc/natter/natter-config.json
         // 当外部IP/端口发生改变时，会执行下方命令。
         // 大括号 {...} 为占位符，命令执行时会被实际值替换。
         // 不需要请留空：""
-        "hook": "bash /usr/bin/natter-hook.sh '{protocol}' '{inner_ip}' '{inner_port}' '{outer_ip}' '{outer_port}'",
+        "hook": "bash /etc/natter/natter-hook.sh '{protocol}' '{inner_ip}' '{inner_port}' '{outer_ip}' '{outer_port}'",
         "status_file": "/etc/natter/natter-status.json"   // 将实时端口映射状态储存至指定文件，不需要请留空：""
     },
     "open_port": {
