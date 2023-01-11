@@ -8,7 +8,7 @@ ExecStart=/usr/bin/natter -c natter-config.json
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 Restart=always
-RestartSec=5
+RestartSec=2
 StartLimitInterval=0
 RestartPreventExitStatus=23
 
