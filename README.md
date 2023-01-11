@@ -10,14 +10,14 @@
 ## 使用例
 首次使用，检查当前网络 NAT 情况：
 ```
-python natter.py --check-nat
+natter --check-nat
 ```
 ![](.img/img01_1.png)
 如果没有告警，那么您的网络一切正常。如有报错，请参考下文“错误解读”部分。
 
 在本地 3456 号 TCP 端口上实行 TCP 打洞，并开启测试用 HTTP 服务：
 ```
-python natter.py -t 3456
+natter -t 3456
 ```
 ![](.img/img01_2.png)
 
@@ -37,13 +37,13 @@ python natter.py -t 3456
 
 此时，我们在 OpenWRT 上使用 Natter 在 `3456` 号端口进行打洞，即可向外网暴露 `192.168.1.100:443` 。
 ```
-python natter.py 3456
+natter 3456
 ```
 
 ## 使用配置文件
 如果您不想手动设置端口转发，可以交由 Natter 处理。同时，使用配置文件，Natter 可以提供更多有用的功能。
 ```
-python natter.py -c ./natter-config.json
+natter -c /etc/natter/natter-config.json
 ```
 配置文件的说明如下：
 ```javascript
@@ -51,14 +51,14 @@ python natter.py -c ./natter-config.json
 {
     "logging": {
         "level": "info",                        // 日志等级：可选值："debug"、"info"、"warning"、"error"
-        "log_file": "./natter.log"              // 将日志输出到指定文件，不需要请留空：""
+        "log_file": "/var/log/natter.log"              // 将日志输出到指定文件，不需要请留空：""
     },
     "status_report": {
         // 当外部IP/端口发生改变时，会执行下方命令。
         // 大括号 {...} 为占位符，命令执行时会被实际值替换。
         // 不需要请留空：""
-        "hook": "bash ./natter-hook.sh '{protocol}' '{inner_ip}' '{inner_port}' '{outer_ip}' '{outer_port}'",
-        "status_file": "./natter-status.json"   // 将实时端口映射状态储存至指定文件，不需要请留空：""
+        "hook": "bash /usr/bin/natter-hook.sh '{protocol}' '{inner_ip}' '{inner_port}' '{outer_ip}' '{outer_port}'",
+        "status_file": "/etc/natter/natter-status.json"   // 将实时端口映射状态储存至指定文件，不需要请留空：""
     },
     "open_port": {
         // 此处设置 Natter 打洞IP:端口。（仅打洞）
@@ -99,7 +99,7 @@ python natter.py -c ./natter-config.json
             "stun.qq.com"
         ]
     },
-    "keep_alive": "www.qq.com"  // 此处设置 HTTP Keep-Alive 服务器。请确保该服务器 80 端口开放，且支持 HTTP Keep-Alive。
+    "keep_alive": "www.baidu.com"  // 此处设置 HTTP Keep-Alive 服务器。请确保该服务器 80 端口开放，且支持 HTTP Keep-Alive。
 }
 ```
 
