@@ -4,7 +4,7 @@ After=network.target syslog.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/natter -c /etc/natter/%i.json
+ExecStart=/usr/sbin/natter -e /etc/natter/%i.py
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 Restart=always

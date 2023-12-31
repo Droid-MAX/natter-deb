@@ -1,8 +1,8 @@
 Package: natter
-Version: 0.9
+Version: 2.0
 Depends: systemd, python
 Section: utils
 Priority: optional
 Architecture: all
 Maintainer: Mike Wang <https://github.com/MikeWang000000/Natter>
-Description: TCP hole punching tool.
+Description: Expose your TCP/UDP port behind full-cone NAT to the Internet.
