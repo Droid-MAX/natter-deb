@@ -1,14 +1,13 @@
 # Natter (v2)
 
 Expose your port behind full-cone NAT to the Internet.
-  
-[中文文档](docs/README.md)
 
+[中文文档](docs/README.md)
 
 ## Quick start
 
 ```bash
-python3 natter.py
+natter
 ```
 
 ```
@@ -42,9 +41,9 @@ Natter
 ## Usage
 
 ```
-usage: natter.py [--version] [--help] [-v] [-q] [-u] [-k <interval>]
-                 [-s <address>] [-h <address>] [-e <path>] [-i <interface>]
-                 [-b <port>] [-m <method>] [-t <address>] [-p <port>] [-r]
+usage: natter [--version] [--help] [-v] [-q] [-u] [-k <interval>]
+              [-s <address>] [-h <address>] [-e <path>] [-i <interface>]
+              [-b <port>] [-m <method>] [-t <address>] [-p <port>] [-r]
 
 Expose your port behind full-cone NAT to the Internet.
 
@@ -71,27 +70,24 @@ forward options:
   -r              keep retrying until the port of forward target is open
 ```
 
-
 ## Use cases
 
 Expose local port 80 to the Internet, using built-in forward method:
 
 ```bash
-python3 natter.py -p 80
+natter -p 80
 ```
 
 Expose local port 80 to the Internet, using iptables kernel forward method (requires root permission):
 
 ```bash
-sudo python3 natter.py -m iptables -p 80
+sudo natter -m iptables -p 80
 ```
-
 
 ## Dependencies
 
 - Python 2.7 (minimum), >= 3.6 (recommended)
 - No third-party modules are required.
-
 
 ## License
 
