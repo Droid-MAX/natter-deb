@@ -4,11 +4,10 @@
 
 *注意：Natter 2.0 重写了整个程序，并不兼容先前版本的命令行用法。详见 [更新说明](upgrade.md) 。*
 
-
 ## 快速开始
 
 ```bash
-python3 natter.py
+natter
 ```
 
 ```
@@ -38,7 +37,6 @@ It works!
 Natter
 ```
 
-
 ## 使用方法
 
 - 详见 [参数说明](usage.md) 。
@@ -46,9 +44,9 @@ Natter
 - 有关通知脚本，详见 [Natter 通知脚本](script.md) 。
 
 ```
-usage: natter.py [--version] [--help] [-v] [-q] [-u] [-k <interval>]
-                 [-s <address>] [-h <address>] [-e <path>] [-i <interface>]
-                 [-b <port>] [-m <method>] [-t <address>] [-p <port>] [-r]
+usage: natter [--version] [--help] [-v] [-q] [-u] [-k <interval>]
+              [-s <address>] [-h <address>] [-e <path>] [-i <interface>]
+              [-b <port>] [-m <method>] [-t <address>] [-p <port>] [-r]
 
 Expose your port behind full-cone NAT to the Internet.
 
@@ -75,27 +73,24 @@ forward options:
   -r              keep retrying until the port of forward target is open
 ```
 
-
 ## 使用例
 
 使用内置转发，对外开放本机 80 端口：
 
 ```bash
-python3 natter.py -p 80
+natter -p 80
 ```
 
 使用 iptables 内核转发（需要 root 权限），对外开放本机 80 端口：
 
 ```bash
-sudo python3 natter.py -m iptables -p 80
+sudo natter -m iptables -p 80
 ```
-
 
 ## 依赖
 
 - Python 2.7 (最低), >= 3.6 (推荐)
 - 不需要安装第三方模块。
-
 
 ## 许可证
 
