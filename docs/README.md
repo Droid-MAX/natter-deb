@@ -9,7 +9,7 @@ natter
 ```
 
 ```
-2023-11-01 01:00:08 [I] Natter v2.0.0-rc3
+2023-11-01 01:00:08 [I] Natter v2.0.0-upnp-dev
 2023-11-01 01:00:08 [I] Tips: Use `--help` to see help messages
 2023-11-01 01:00:12 [I]
 2023-11-01 01:00:12 [I] tcp://192.168.1.100:13483 <--Natter--> tcp://203.0.113.10:14500
@@ -54,6 +54,7 @@ options:
   -v              verbose mode, printing debug messages
   -q              exit when mapped address is changed
   -u              UDP mode
+  -U              enable UPnP/IGD discovery
   -k <interval>   seconds between each keep-alive
   -s <address>    hostname or address to STUN server
   -h <address>    hostname or address to keep-alive server
