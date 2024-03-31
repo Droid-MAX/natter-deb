@@ -24,7 +24,6 @@ import sys
 import json
 import time
 import errno
-import shlex
 import atexit
 import codecs
 import random
@@ -35,7 +34,7 @@ import argparse
 import threading
 import subprocess
 
-__version__ = "2.0.0-upnp-dev"
+__version__ = "2.0.0"
 
 
 class Logger(object):
