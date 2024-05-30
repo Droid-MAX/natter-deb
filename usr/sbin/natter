@@ -34,7 +34,7 @@ import argparse
 import threading
 import subprocess
 
-__version__ = "2.0.0"
+__version__ = "2.1.0"
 
 
 class Logger(object):
@@ -1006,7 +1006,8 @@ class ForwardSocket(object):
 
 
 class UPnPService(object):
-    def __init__(self, bind_ip = None, interface = None):
+    def __init__(self, device, bind_ip = None, interface = None):
+        self.device             = device
         self.service_type       = None
         self.service_id         = None
         self.scpd_url           = None
@@ -1100,7 +1101,9 @@ class UPnPService(object):
         if m:
             errmsg = m.group(1).strip()
         if errno or errmsg:
-            Logger.error("upnp: Error from device %s: [%s] %s" % (self.ipaddr, errno, errmsg))
+            Logger.error("upnp: Error from service %s of device %s: [%s] %s" % (
+                self.service_type, self.device, errno, errmsg
+            ))
             return False
         return True
 
@@ -1167,11 +1170,15 @@ class UPnPDevice(object):
         return s[1]
 
     def _get_srv_dict(self, url):
-        xmlcontent = self._http_get(url).decode("utf-8", "ignore")
+        try:
+            xmlcontent = self._http_get(url).decode("utf-8", "ignore")
+        except (OSError, socket.error, ValueError) as ex:
+            Logger.error("upnp: failed to load service from %s: %s" % (url, ex))
+            return
         services_d = {}
         srv_str_l = re.findall(r"<service\s*>([\s\S]+?)</service\s*>", xmlcontent)
         for srv_str in srv_str_l:
-            srv = UPnPService(bind_ip=self._bind_ip, interface=self._bind_interface)
+            srv = UPnPService(self, bind_ip=self._bind_ip, interface=self._bind_interface)
             m = re.search(r"<serviceType\s*>([^<]*?)</serviceType\s*>", srv_str)
             if m:
                 srv.service_type    = m.group(1).strip()
@@ -1398,18 +1405,17 @@ def check_docker_network():
 
 
 def split_url(url):
-    if not url.startswith("http://"):
+    m = re.match(
+        r"^http://([^\[\]:/]+)(?:\:([0-9]+))?(/\S*)?$", url
+    )
+    if not m:
         raise ValueError("Unsupported URL: %s" % url)
-    host, rpath = url.split("http://", 1)[1].split("/", 1)
-    if '[' in host:
-        raise ValueError("Unsupported URL: %s" % url)
-    path = "/" + rpath
-    if ":" in host:
-        hostname, port_ = host.split(":")
-        port = int(port_)
-    else:
-        hostname = host
-        port = 80
+    hostname, port_str, path = m.groups()
+    port = 80
+    if port_str:
+        port = int(port_str)
+    if not path:
+        path = "/"
     return hostname, port, path
 
 
@@ -1587,6 +1593,8 @@ def natter_main(show_title = True):
     if not stun_list:
         stun_list = [
             "fwa.lifesizecloud.com",
+            "global.turn.twilio.com",
+            "turn.cloudflare.com",
             "stun.isp.net.au",
             "stun.nextcloud.com",
             "stun.freeswitch.org",
@@ -1594,16 +1602,25 @@ def natter_main(show_title = True):
             "stunserver.stunprotocol.org",
             "stun.sipnet.com",
             "stun.radiojar.com",
-            "stun.sonetel.com",
-            "stun.voipgate.com"
+            "stun.sonetel.com"
         ]
-        if udp_mode:
-            stun_list = ["stun.miwifi.com", "stun.qq.com", "stun.chat.bilibili.com"] + stun_list
+        if not udp_mode:
+            stun_list = [
+                "turn.cloud-rtc.com:80"
+            ] + stun_list
+        else:
+            stun_list = [
+                "stun.miwifi.com",
+                "stun.chat.bilibili.com",
+                "stun.hitv.com",
+                "stun.cdnbye.com",
+                "stun.douyucdn.cn:18000"
+            ] + stun_list
 
     if not keepalive_srv:
         keepalive_srv = "www.baidu.com"
         if udp_mode:
-            keepalive_srv = "8.8.8.8"
+            keepalive_srv = "119.29.29.29"
 
     stun_srv_list = []
     for item in stun_list:
@@ -1701,14 +1718,26 @@ def natter_main(show_title = True):
 
     # UPnP
     upnp = None
+    upnp_router = None
+    upnp_ready = False
+
     if upnp_enabled:
         upnp = UPnPClient(bind_ip=natter_addr[0], interface=bind_interface)
         Logger.info()
         Logger.info("Scanning UPnP Devices...")
-        upnp_router = upnp.discover_router()
-        if upnp_router:
-            Logger.info("[UPnP] Found router %s" % upnp_router.ipaddr)
+        try:
+            upnp_router = upnp.discover_router()
+        except (OSError, socket.error, ValueError) as ex:
+            Logger.error("upnp: failed to discover router: %s" % ex)
+
+    if upnp_router:
+        Logger.info("[UPnP] Found router %s" % upnp_router.ipaddr)
+        try:
             upnp.forward("", bind_port, bind_ip, bind_port, udp=udp_mode, duration=interval*3)
+        except (OSError, socket.error, ValueError) as ex:
+            Logger.error("upnp: failed to forward port: %s" % ex)
+        else:
+            upnp_ready = True
 
     # Display route information
     Logger.info()
@@ -1791,7 +1820,7 @@ def natter_main(show_title = True):
                 Logger.error("keep-alive: connection broken: %s" % ex)
             keep_alive.reset()
             need_recheck = True
-        if upnp:
+        if upnp_ready:
             try:
                 upnp.renew()
             except (OSError, socket.error) as ex:
