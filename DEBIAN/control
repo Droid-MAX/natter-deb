@@ -1,5 +1,5 @@
 Package: natter
-Version: 2.1.0
+Version: 2.1.1
 Depends: systemd, python
 Section: utils
 Priority: optional
