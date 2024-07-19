@@ -41,7 +41,7 @@ Natter
 ## Usage
 
 ```
-usage: natter [--version] [--help] [-v] [-q] [-u] [-k <interval>]
+usage: natter [--version] [--help] [-v] [-q] [-u] [-U] [-k <interval>]
               [-s <address>] [-h <address>] [-e <path>] [-i <interface>]
               [-b <port>] [-m <method>] [-t <address>] [-p <port>] [-r]
 
