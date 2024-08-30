@@ -10,7 +10,7 @@ KillMode=process
 Restart=always
 RestartSec=2
 StartLimitInterval=0
-RestartPreventExitStatus=23
+RestartForceExitStatus=143 137
 
 [Install]
 WantedBy=multi-user.target
